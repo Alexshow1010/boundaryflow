@@ -3749,6 +3749,7 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: auto;
   overflow: hidden;
 }
 .wearable-panel-header {
@@ -3769,11 +3770,11 @@ body {
 }
 .wearable-panel-body {
   display: grid;
-  grid-template-rows: minmax(190px, 240px) auto auto auto;
-  align-content: space-between;
-  flex: 1 1 auto;
+  grid-template-rows: minmax(170px, 1fr) auto auto;
+  align-content: stretch;
+  flex: 1 0 auto;
   min-height: 0;
-  height: 100%;
+  height: auto;
   gap: 10px;
   padding: 8px 12px 12px;
 }
@@ -3880,6 +3881,12 @@ body {
   font: 11px "IBM Plex Mono";
   font-weight: 500;
 }
+.wearable-metrics {
+  display: grid;
+  grid-template-rows: auto auto;
+  min-width: 0;
+  gap: 8px;
+}
 .wearable-meta-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3934,7 +3941,7 @@ body {
 
 @media (max-width: 1499px) {
   .wearable-panel-body {
-    grid-template-rows: minmax(180px, 220px) auto auto auto;
+    grid-template-rows: minmax(170px, 1fr) auto auto;
     gap: 8px;
     padding: 8px 10px 10px;
   }
@@ -3952,8 +3959,107 @@ body {
   }
 }
 
+/* Browser zoom can move a desktop viewport into this legacy compact-height range.
+   Keep the grid content-sized so the wearable never inherits the old fixed row. */
+@media (min-width: 1200px) and (max-width: 1499px) and (max-height: 820px) {
+  .device-grid {
+    height: auto;
+    min-height: 590px;
+  }
+  .wearable-panel {
+    height: auto;
+    min-height: 590px;
+  }
+  .wearable-panel-body {
+    grid-template-rows: minmax(150px, 1fr) auto auto;
+  }
+  .wearable-visual-stage {
+    min-height: 150px;
+    max-height: 180px;
+  }
+  .wearable-visual-stage .device-product {
+    max-height: 170px;
+  }
+  .wearable-visual-stage .device-product .strap.top {
+    height: 30px;
+  }
+  .wearable-visual-stage .device-product .strap.bottom {
+    height: 22px;
+  }
+  .wearable-visual-stage .watch-body {
+    width: 88px;
+    height: 96px;
+  }
+  .wearable-visual-stage .watch-face {
+    width: 68px;
+    height: 76px;
+  }
+}
+
 @media (max-width: 760px) {
   .wearable-meta-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Keep the control deck content-led through the narrow desktop range. The
+   legacy 1500px rule above otherwise moves Incident Controls back into a
+   third column before that column has enough room for five readable labels. */
+@media (min-width: 761px) and (max-width: 1599px) {
+  .control-deck {
+    grid-template-columns: minmax(250px, 0.8fr) minmax(360px, 1.2fr);
+    height: auto;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  .incident-group {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .incident-group .group-label,
+  .group-label.compact {
+    display: flex;
+  }
+
+  .group-label.compact > span {
+    display: grid;
+  }
+
+  .incident-controls {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-width: 0;
+    gap: 6px;
+    align-content: center;
+  }
+
+  .incident-controls button {
+    min-width: 0;
+    padding-inline: 8px;
+    white-space: nowrap;
+  }
+
+  .incident-controls button:last-child {
+    grid-column: auto;
+  }
+}
+
+/* Keep the compact-height desktop mode readable after the two-row control deck. */
+@media (min-width: 761px) and (max-width: 1599px) and (max-height: 820px) {
+  .control-deck {
+    height: auto;
+    min-height: 116px;
+  }
+
+  .incident-group {
+    min-height: 44px;
+  }
+
+  .incident-controls button {
+    min-height: 30px;
   }
 }
