@@ -1,0 +1,31 @@
+{
+  "name": "boundaryflow-simulator",
+  "version": "0.1.0",
+  "description": "Interactive cross-device simulator for the BoundaryFlow app-and-wearable safety system.",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "lint": "eslint src --ext .ts,.tsx --max-warnings=0",
+    "build": "next build",
+    "start": "next start",
+    "test:final": "node scripts/final-pass.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "next": "^15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.5.20",
+    "playwright-core": "^1.54.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.2"
+  }
+}
