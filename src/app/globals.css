@@ -3743,3 +3743,217 @@ body {
     animation: none !important;
   }
 }
+
+/* Restricted Wearable: stable header-safe document flow. */
+.wearable-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+.wearable-panel-header {
+  position: relative;
+  z-index: 5;
+  flex: 0 0 50px;
+  min-height: 50px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(8, 28, 42, 0.98), rgba(7, 23, 35, 0.96));
+}
+.wearable-panel-header .panel-title {
+  width: 100%;
+  height: 50px;
+  margin: 0;
+}
+.wearable-panel-header .panel-title-status {
+  display: block;
+}
+.wearable-panel-body {
+  display: grid;
+  grid-template-rows: minmax(190px, 240px) auto auto auto;
+  align-content: space-between;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  gap: 10px;
+  padding: 8px 12px 12px;
+}
+.wearable-visual-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  min-height: 190px;
+  max-height: 240px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--tone) 10%, transparent), transparent 52%);
+}
+.wearable-visual-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 11px;
+  width: min(64%, 180px);
+  height: 44px;
+  transform: translateX(-50%) rotateX(70deg);
+  border: 1px solid color-mix(in srgb, var(--tone) 32%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 19px color-mix(in srgb, var(--tone) 12%, transparent);
+  opacity: 0.74;
+}
+.wearable-visual-stage .wearable-ripple {
+  z-index: 1;
+  left: 50%;
+  bottom: 13px;
+  width: min(54%, 150px);
+  height: 42px;
+  transform: translateX(-50%) rotateX(68deg);
+}
+.wearable-visual-stage .device-product {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: clamp(110px, 46%, 190px);
+  max-height: 210px;
+  transform: none;
+  transform-style: flat;
+}
+.wearable-visual-stage .device-product .strap {
+  flex: 0 0 auto;
+  width: 58px;
+}
+.wearable-visual-stage .device-product .strap.top {
+  height: 38px;
+}
+.wearable-visual-stage .device-product .strap.bottom {
+  height: 28px;
+}
+.wearable-visual-stage .watch-body {
+  flex: 0 0 auto;
+  width: 96px;
+  height: 108px;
+}
+.wearable-visual-stage .watch-face {
+  width: 74px;
+  height: 85px;
+}
+.wearable-primary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-width: 0;
+  border-top: 1px solid rgba(118, 184, 226, 0.13);
+  border-bottom: 1px solid rgba(118, 184, 226, 0.13);
+}
+.wearable-state-cell {
+  min-width: 0;
+  min-height: 47px;
+  padding: 8px 10px;
+  border-left: 2px solid color-mix(in srgb, var(--tone) 45%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tone) 7%, #07131d), rgba(5, 16, 24, 0.56));
+  overflow: hidden;
+}
+.wearable-state-cell span,
+.wearable-state-cell strong,
+.wearable-meta-grid span,
+.wearable-meta-grid b,
+.wearable-last-sync span,
+.wearable-last-sync b {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wearable-state-cell span,
+.wearable-meta-grid span,
+.wearable-last-sync span {
+  color: var(--text-muted);
+  font: 7px "IBM Plex Mono";
+  letter-spacing: 0.75px;
+}
+.wearable-state-cell strong {
+  margin-top: 4px;
+  color: var(--text-primary);
+  font: 11px "IBM Plex Mono";
+  font-weight: 500;
+}
+.wearable-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+  border-top: 1px solid rgba(118, 184, 226, 0.1);
+  border-left: 1px solid rgba(118, 184, 226, 0.1);
+}
+.wearable-meta-grid > div {
+  min-width: 0;
+  min-height: 46px;
+  padding: 8px 9px;
+  border-right: 1px solid rgba(118, 184, 226, 0.1);
+  border-bottom: 1px solid rgba(118, 184, 226, 0.1);
+}
+.wearable-meta-grid b {
+  margin-top: 4px;
+  color: #b7ccd8;
+  font: 8px "IBM Plex Mono";
+  font-weight: 500;
+}
+.wearable-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  min-height: 39px;
+  margin-top: auto;
+  padding: 7px 9px;
+  border-top: 1px solid rgba(118, 184, 226, 0.11);
+  background: rgba(5, 16, 24, 0.42);
+}
+.wearable-last-sync {
+  min-width: 0;
+}
+.wearable-last-sync b {
+  margin-top: 3px;
+  color: #a9c2d2;
+  font: 8px "IBM Plex Mono";
+}
+.wearable-footer .audio-row {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  margin: 0;
+}
+.wearable-footer .audio-row > div {
+  display: none;
+}
+.wearable-footer .audio-row button {
+  height: 24px;
+}
+
+@media (max-width: 1499px) {
+  .wearable-panel-body {
+    grid-template-rows: minmax(180px, 220px) auto auto auto;
+    gap: 8px;
+    padding: 8px 10px 10px;
+  }
+  .wearable-visual-stage {
+    min-height: 180px;
+    max-height: 220px;
+  }
+  .wearable-state-cell {
+    min-height: 44px;
+    padding-block: 7px;
+  }
+  .wearable-meta-grid > div {
+    min-height: 43px;
+    padding-block: 7px;
+  }
+}
+
+@media (max-width: 760px) {
+  .wearable-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

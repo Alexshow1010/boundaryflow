@@ -430,15 +430,17 @@ export default function Simulator() {
         </article>
 
         <article className={`glass wearable-panel ${!online ? "offline" : ""} vibration-${vibration} tamper-${tamper}`}>
-          <PanelTitle icon="watch" eyebrow="RESTRICTED DEVICE" title="受限制穿戴裝置" status={<span className={`connection ${online ? "on" : "off"}`}>{online ? "ONLINE" : "OFFLINE"}</span>} />
-          <div className="wearable-stage"><div className="wearable-ripple" /><div className="device-product"><div className="strap top" /><div className="watch-body"><div className="watch-light" /><div className="watch-face"><Icon name={tamper === "normal" ? "shield" : "lock"} size={38} /><span>{online ? META[level].label : "OFFLINE"}</span></div></div><div className="strap bottom" /></div></div>
-          <div className="wearable-primary"><div><span>CONNECTION</span><strong className={online ? "ok" : "danger"}>{online ? "ONLINE" : "OFFLINE"}</strong></div><div><span>WARNING</span><strong style={{ color: tone }}>{META[level].en}</strong></div><div><span>VIBRATION</span><strong>{vibration.toUpperCase()}</strong></div><div><span>TAMPER</span><strong className={tamper !== "normal" ? "danger" : ""}>{tamper.toUpperCase()}</strong></div></div>
-          <div className="device-facts secondary">
-            <div><span>DEVICE ID</span><b>WB-7A8C</b></div><div><span>PAIRED</span><b>YES</b></div><div><span>BATTERY</span><b>78%</b></div>
-            <div><span>COMPLIANCE</span><b className={tamper !== "normal" ? "warning-text" : "ok"}>{compliance}</b></div><div><span>AUDIO</span><b className={audioAlert ? "danger" : ""}>{audioAlert ? "ON" : "OFF"}</b></div>
-            <div><span>INDICATOR</span><b><i className="status-light" style={{ background: online ? tone : "#68717a", boxShadow: `0 0 10px ${online ? tone : "transparent"}` }} />{online ? META[level].en : "OFF"}</b></div><div className="wide"><span>LAST SYNC</span><b>{lastSync}</b></div>
+          <header className="wearable-panel-header"><PanelTitle icon="watch" eyebrow="RESTRICTED DEVICE" title="受限制穿戴裝置" status={<span className={`connection ${online ? "on" : "off"}`}>{online ? "ONLINE" : "OFFLINE"}</span>} /></header>
+          <div className="wearable-panel-body">
+            <div className="wearable-visual-stage"><div className="wearable-ripple" /><div className="device-product"><div className="strap top" /><div className="watch-body"><div className="watch-light" /><div className="watch-face"><Icon name={tamper === "normal" ? "shield" : "lock"} size={38} /><span>{online ? META[level].label : "OFFLINE"}</span></div></div><div className="strap bottom" /></div></div>
+            <div className="wearable-primary-grid"><div className="wearable-state-cell"><span>CONNECTION</span><strong className={online ? "ok" : "danger"}>{online ? "ONLINE" : "OFFLINE"}</strong></div><div className="wearable-state-cell"><span>WARNING</span><strong style={{ color: tone }}>{META[level].en}</strong></div><div className="wearable-state-cell"><span>VIBRATION</span><strong>{vibration.toUpperCase()}</strong></div><div className="wearable-state-cell"><span>TAMPER</span><strong className={tamper !== "normal" ? "danger" : ""}>{tamper.toUpperCase()}</strong></div></div>
+            <div className="wearable-meta-grid">
+              <div><span>DEVICE ID</span><b>WB-7A8C</b></div><div><span>PAIRED</span><b>YES</b></div><div><span>BATTERY</span><b>78%</b></div>
+              <div><span>COMPLIANCE</span><b className={tamper !== "normal" ? "warning-text" : "ok"}>{compliance}</b></div><div><span>AUDIO</span><b className={audioAlert ? "danger" : ""}>{audioAlert ? "ON" : "OFF"}</b></div>
+              <div><span>INDICATOR</span><b><i className="status-light" style={{ background: online ? tone : "#68717a", boxShadow: `0 0 10px ${online ? tone : "transparent"}` }} />{online ? META[level].en : "OFF"}</b></div>
+            </div>
+            <div className="wearable-footer"><div className="wearable-last-sync"><span>LAST SYNC</span><b>{lastSync}</b></div><div className="audio-row"><div><Icon name="bell" /><span>Demo sound</span></div><button aria-label="切換示範音效" className={!soundMuted ? "on" : ""} onClick={() => setSoundMuted(muted => !muted)}><i />{soundMuted ? "MUTED" : "VISUAL ON"}</button></div></div>
           </div>
-          <div className="audio-row"><div><Icon name="bell" /><span>Demo sound</span></div><button aria-label="切換示範音效" className={!soundMuted ? "on" : ""} onClick={() => setSoundMuted(muted => !muted)}><i />{soundMuted ? "MUTED" : "VISUAL ON"}</button></div>
         </article>
       </section>
 

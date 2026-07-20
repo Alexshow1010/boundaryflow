@@ -54,6 +54,21 @@ try {
       const app = rect(".app-panel");
       const field = rect(".field-panel");
       const wearable = rect(".wearable-panel");
+      const wearableHeader = rect(".wearable-panel-header");
+      const wearableBody = rect(".wearable-panel-body");
+      const wearableStage = rect(".wearable-visual-stage");
+      const wearableDevice = rect(".wearable-visual-stage .device-product");
+      const wearableStrapTop = rect(".wearable-visual-stage .strap.top");
+      const wearableStrapBottom = rect(".wearable-visual-stage .strap.bottom");
+      const wearablePrimary = rect(".wearable-primary-grid");
+      const wearablePrimaryCells = [...document.querySelectorAll(".wearable-state-cell")]
+        .map(cell => cell.getBoundingClientRect());
+      const wearableMeta = rect(".wearable-meta-grid");
+      const wearableMetaCells = [...document.querySelectorAll(".wearable-meta-grid > div")]
+        .map(cell => cell.getBoundingClientRect());
+      const wearableFooter = rect(".wearable-footer");
+      const wearableLastSync = rect(".wearable-last-sync");
+      const wearablePanelElement = document.querySelector(".wearable-panel");
       const phone = rect(".phone-shell");
       const navigation = rect(".phone-nav");
       const phoneTop = rect(".phone-top");
@@ -95,6 +110,41 @@ try {
             && appStatus.top - phoneTop.bottom <= 24
             && appStatus.bottom < shield.top)
         },
+        wearable: {
+          headerHeight: Math.round(wearableHeader?.height || 0),
+          stageHeight: Math.round(wearableStage?.height || 0),
+          stageBelowHeader: Boolean(wearableHeader && wearableStage && wearableStage.top >= wearableHeader.bottom),
+          deviceBelowHeader: Boolean(wearableHeader && wearableDevice && wearableDevice.top > wearableHeader.bottom),
+          deviceCentered: Boolean(wearableStage && wearableDevice
+            && Math.abs((wearableStage.left + wearableStage.width / 2) - (wearableDevice.left + wearableDevice.width / 2)) <= 2),
+          deviceContained: Boolean(wearableStage && wearableDevice
+            && wearableDevice.top >= wearableStage.top
+            && wearableDevice.bottom <= wearableStage.bottom
+            && wearableDevice.left >= wearableStage.left
+            && wearableDevice.right <= wearableStage.right),
+          strapsVisible: Boolean(wearableStage && wearableStrapTop && wearableStrapBottom
+            && wearableStrapTop.height > 0
+            && wearableStrapBottom.height > 0
+            && wearableStrapTop.top >= wearableStage.top
+            && wearableStrapBottom.bottom <= wearableStage.bottom),
+          primaryCellCount: wearablePrimaryCells.length,
+          primaryCellsReadable: wearablePrimaryCells.every(cell => cell.width >= 100 && cell.height >= 42),
+          metaCellCount: wearableMetaCells.length,
+          metaCellsReadable: wearableMetaCells.every(cell => cell.width >= 65 && cell.height >= 40),
+          footerVisible: Boolean(wearableFooter && wearableLastSync
+            && wearableFooter.height >= 36
+            && wearableLastSync.top >= wearableFooter.top
+            && wearableLastSync.bottom <= wearableFooter.bottom),
+          flowOrder: Boolean(wearableStage && wearablePrimary && wearableMeta && wearableFooter
+            && wearableStage.bottom <= wearablePrimary.top + 1
+            && wearablePrimary.bottom <= wearableMeta.top + 1
+            && wearableMeta.bottom <= wearableFooter.top + 1),
+          bodyContained: Boolean(wearable && wearableBody && wearableFooter
+            && wearableBody.top >= wearableHeader.bottom
+            && wearableFooter.bottom <= wearable.bottom + 1),
+          internalOverflow: Boolean(wearablePanelElement
+            && wearablePanelElement.scrollHeight > wearablePanelElement.clientHeight + 1)
+        },
         controls: {
           minIncidentWidth: Math.min(...incidentWidths),
           contained: incidentWidths.every(width => width > 0)
@@ -109,6 +159,9 @@ try {
         }
       };
     }, viewport));
+    if (viewport.width === 1920) {
+      await page.screenshot({ path: "artifacts/boundaryflow-wearable-final-1920x1080.png", fullPage: false });
+    }
     if (viewport.width === 1536 || viewport.width === 1100) {
       await page.screenshot({ path: `artifacts/boundaryflow-final-${viewport.width}x${viewport.height}.png`, fullPage: true });
     }
@@ -142,20 +195,31 @@ try {
     && document.querySelectorAll(".core-orbit").length === 2
     && !document.querySelector(".core-dome")
   ));
+  const wearableDistanceStateWorks = await page.evaluate(() => {
+    const values = [...document.querySelectorAll(".wearable-state-cell strong")].map(node => node.textContent?.trim());
+    return values[0] === "ONLINE" && values[1] === "CRITICAL" && values[2] === "CONTINUOUS" && values[3] === "NORMAL";
+  });
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.waitForTimeout(180);
   await page.screenshot({ path: "artifacts/boundaryflow-final-polish-critical-1920x1080.png", fullPage: false });
 
   const incidentButtons = page.locator(".incident-controls button");
   await incidentButtons.nth(0).click();
-  const offlineWorks = await page.locator(".wearable-panel.offline").isVisible();
+  const offlineWorks = await page.locator(".wearable-panel.offline").isVisible()
+    && await page.locator(".wearable-state-cell").nth(0).getByText("OFFLINE", { exact: true }).isVisible();
   await incidentButtons.nth(1).click();
   await incidentButtons.nth(2).click();
-  const suspectedWorks = await page.locator(".wearable-panel.tamper-suspected").isVisible();
+  const suspectedWorks = await page.locator(".wearable-panel.tamper-suspected").isVisible()
+    && await page.locator(".wearable-state-cell").nth(3).getByText("SUSPECTED", { exact: true }).isVisible();
   await incidentButtons.nth(3).click();
-  const confirmedWorks = await page.locator(".wearable-panel.tamper-confirmed").isVisible();
+  const confirmedWorks = await page.locator(".wearable-panel.tamper-confirmed").isVisible()
+    && await page.locator(".wearable-state-cell").nth(3).getByText("CONFIRMED", { exact: true }).isVisible();
   await page.locator(".reset-control").click();
   await page.waitForTimeout(180);
+  const wearableResetWorks = await page.evaluate(() => {
+    const values = [...document.querySelectorAll(".wearable-state-cell strong")].map(node => node.textContent?.trim());
+    return values[0] === "ONLINE" && values[1] === "NORMAL" && values[2] === "NONE" && values[3] === "NORMAL";
+  });
 
   await page.locator(".control.primary").click();
   for (let second = 0; second < 64; second += 1) {
@@ -185,6 +249,21 @@ try {
     && item.phone.navigationContained
     && item.phone.primaryActionsContained
     && item.phone.statusFirst
+    && item.wearable.headerHeight >= 50
+    && item.wearable.stageHeight >= 180
+    && item.wearable.stageBelowHeader
+    && item.wearable.deviceBelowHeader
+    && item.wearable.deviceCentered
+    && item.wearable.deviceContained
+    && item.wearable.strapsVisible
+    && item.wearable.primaryCellCount === 4
+    && item.wearable.primaryCellsReadable
+    && item.wearable.metaCellCount === 6
+    && item.wearable.metaCellsReadable
+    && item.wearable.footerVisible
+    && item.wearable.flowOrder
+    && item.wearable.bodyContained
+    && !item.wearable.internalOverflow
     && item.controls.minIncidentWidth >= 70
     && item.controls.contained
     && !item.console.horizontalOverflow
@@ -195,6 +274,8 @@ try {
     layoutStable,
     markerStable,
     sonarStable,
+    wearableDistanceStateWorks,
+    wearableResetWorks,
     offlineWorks,
     suspectedWorks,
     confirmedWorks,
